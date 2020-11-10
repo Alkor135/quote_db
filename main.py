@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 import pandas as pd
 import sqlite3
-from sqlalchemy import create_engine
 
 if __name__ == '__main__':
     # Загружаем файл в DF
