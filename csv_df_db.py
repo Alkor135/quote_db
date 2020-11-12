@@ -1,7 +1,9 @@
 # -*- coding: utf-8 -*-
+
+# Попытка чтения данных из csv в dataframe, обработка dataframe, запись в БД sqlite
+
 import pandas as pd
 import sqlite3
-from sqlalchemy import create_engine
 
 
 def columns_change(df):
@@ -39,24 +41,25 @@ if __name__ == '__main__':
     df_quote = pd.read_csv('c:/data_finam_quote_csv/SPFB.RTS_5min_200901.csv', delimiter=',')
 
     df_quote = date_time_join(df_quote)  # Меняем индекс в dataframe на дату и время
-
     df_quote = columns_change(df_quote)  # Меняем названия колонок
     # print(df_quote)
 
     # Создание БД и(или) подключение к ней
     con = sqlite3.connect("c:/data_quote_db/my-test.db")  # или :memory: чтобы сохранить в RAM
 
-    # Создание таблицы и запись туда dataframe
-    df_quote.to_sql('rts_5min', con, if_exists='append')
+    # Создание таблицы БД и запись туда dataframe
+    df_quote.to_sql('rts_5min', con, if_exists='append', index_label='date_time')
 
     # Добавление dataframe
     df_quote = pd.read_csv('c:/data_finam_quote_csv/SPFB.RTS_5min_200902.csv', delimiter=',')
     df_quote = date_time_join(df_quote)  # Меняем индекс в dataframe на дату и время
     df_quote = columns_change(df_quote)  # Меняем названия колонок
-    df_quote.to_sql('rts_5min', con, if_exists='append')
+    df_quote.to_sql('rts_5min', con, if_exists='append', index_label='date_time')
 
     # Добавление повторно dataframe
     df_quote = pd.read_csv('c:/data_finam_quote_csv/SPFB.RTS_5min_200901.csv', delimiter=',')
     df_quote = date_time_join(df_quote)  # Меняем индекс в dataframe на дату и время
     df_quote = columns_change(df_quote)  # Меняем названия колонок
-    df_quote.to_sql('rts_5min', con, if_exists='append')
+    df_quote.to_sql('rts_5min', con, if_exists='append', index_label='date_time')
+
+    # Не получилось сделать колонку date_time в БД уникальной
